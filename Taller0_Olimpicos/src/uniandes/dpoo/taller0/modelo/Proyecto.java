@@ -1,6 +1,7 @@
 package uniandes.dpoo.taller0.modelo;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /*
  * Esta clase encapsula toda la información de un proyecto.
@@ -47,14 +48,14 @@ public class Proyecto {
 	private Participante participanteInicial;
 	
 	/**
-	 * La lista de participantes del proyecto.
+	 * El mapa de participantes del proyecto.
 	 */
-	private ArrayList<Participante> participantes;
+	private HashMap<String, Participante> participantes;
 	
 	/**
-	 * La lista de actividades del proyecto.
+	 * El mapa de actividades del proyecto.
 	 */
-	private ArrayList<Actividad> actividades;
+	private HashMap<String,Actividad> actividades;
 	
 	
 	// ************************************************************************
@@ -77,6 +78,8 @@ public class Proyecto {
 		this.fechaInicio = fechaInicio;
 		this.fechaFin = fechaFin;
 		this.participanteInicial = participanteInicial;
+		this.participantes = new HashMap<String, Participante>();
+		this.actividades = new HashMap<String,Actividad>();
 	}
 
 
@@ -130,20 +133,20 @@ public class Proyecto {
 	}
 
 	/**
-	 * Consulta la lista de participantes del proyecto.
+	 * Consulta el mapa de participantes del proyecto.
 	 * 
 	 * @return participantes
 	 */
-	public ArrayList<Participante> getParticipantes() {
+	public HashMap<String, Participante> getParticipantes() {
 		return participantes;
 	}
 
 	/**
-	 * Consulta la lista de actividades del proyecto.
+	 * Consulta el mapa de actividades del proyecto.
 	 * 
 	 * @return actividades
 	 */
-	public ArrayList<Actividad> getActividades() {
+	public HashMap<String,Actividad> getActividades() {
 		return actividades;
 	}
 	
@@ -158,16 +161,16 @@ public class Proyecto {
 	 * @param participante
 	 */
 	public void añadirParticipante(Participante participante) {
-		participantes.add(participante);
+		participantes.put(participante.getCorreo(), participante);
 	}
 	
 	/**
-	 * Añade una actividad a la lista de actividades.
+	 * Añade una actividad al mapa de actividades.
 	 * 
 	 * @param actividad
 	 */
 	public void añadirActividad(Actividad actividad) {
-		actividades.add(actividad);
+		actividades.put(actividad.getTitulo(), actividad);
 	}
 	
 }

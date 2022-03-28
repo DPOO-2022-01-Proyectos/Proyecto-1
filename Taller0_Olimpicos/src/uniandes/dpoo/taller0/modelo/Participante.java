@@ -15,7 +15,7 @@ public class Participante {
 	 * > Quitar del UML el atributo esParticipanteInicial; debería tenerlo el Proyecto.
 	 * > Cambiar el sentido de la flecha "autor".
 	 * > El atributo registroActividParticipante es cambió por registros.
-	 * > Añadir al UML el método añadirRegistroActividad.
+	 * > Añadir al UML el método añadirRegistroActividad, proyectos y añadirProyecto.
 	 */
 
 	
@@ -37,6 +37,12 @@ public class Participante {
 	 * La lista de los registros hechas por el participante.
 	 */
 	private ArrayList<RegistroActividad> registros;
+	
+	/**
+	 * La lista de los nombres de los proyectos de los que hace parte el
+	 * participante.
+	 */
+	private ArrayList<String> proyectos;
 
 	
 	// ************************************************************************
@@ -53,6 +59,8 @@ public class Participante {
 	public Participante(String nombre, String correo) {
 		this.nombre = nombre;
 		this.correo = correo;
+		this.registros = new ArrayList<RegistroActividad>();
+		this.proyectos = new ArrayList<String>();
 	}
 	
 	
@@ -87,6 +95,15 @@ public class Participante {
 		return registros;
 	}
 	
+	/**
+	 * Consulta la lista de proyectos del participante.
+	 * 
+	 * @return proyectos
+	 */	
+	public ArrayList<String> getProyectos() {
+		return proyectos;
+	}
+	
 	
 	// ************************************************************************
 	// Otros métodos
@@ -100,6 +117,15 @@ public class Participante {
 	 */
 	public void añadirRegistroActividad(RegistroActividad registro) {
 		registros.add(registro);
+	}
+	
+	/**
+	 * Añade un proyecto a la lista de proyectos.
+	 * 
+	 * @param nombreProyecto
+	 */
+	public void añadirProyecto(String nombreProyecto) {
+		proyectos.add(nombreProyecto);
 	}
 	
 }

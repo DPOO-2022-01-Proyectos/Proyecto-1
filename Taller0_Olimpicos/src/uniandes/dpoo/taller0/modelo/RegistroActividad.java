@@ -22,7 +22,7 @@ public class RegistroActividad {
 	// ************************************************************************
 
 	/**
-	 * El nombre del registro.
+	 * El nombre del registro. Es igual al nombre de la actividad.
 	 */
 	private String nombre;
 	
