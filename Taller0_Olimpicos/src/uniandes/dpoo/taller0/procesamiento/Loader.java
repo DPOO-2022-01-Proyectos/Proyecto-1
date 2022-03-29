@@ -36,23 +36,8 @@ public class Loader {
 		
 		adminProy = cargarParticipantes(adminProy, archivoParticipantes);
 		adminProy = cargarProyectos(adminProy, archivoProyectos);
-		adminProy = cargarActividades(adminProy, archivoActividades);
-		
-		HashMap<String, Participante> participantes = adminProy.getParticipantes();
-		System.out.println(participantes.get("j.jauregui@uniandes.edu.co").getCorreo());
-		
+		adminProy = cargarActividades(adminProy, archivoActividades);		
 		adminProy = cargarRegistros(adminProy, archivoRegistros);
-		
-		HashMap<String, Proyecto> proyectos = adminProy.getProyectos();
-		for (Proyecto proy:proyectos.values()) {
-			System.out.println(proy.getNombre() + ":");
-			for (Actividad act:proy.getActividades().values()) {
-				System.out.println(act.getTitulo() + ":");
-				for (RegistroActividad reg:act.getRegistros()) {
-					System.out.println(reg.getAutor());
-				}
-			}
-		}
 		
 		return adminProy;
 	}
@@ -189,7 +174,6 @@ public class Loader {
 			// Crear el registro y guardarlo.
 			String nombre = partes[0];
 			String correoAutor = partes[1];
-			System.out.println(correoAutor);
 			Participante autor = adminProy.getParticipantes().get(correoAutor);
 			Fecha fecha = new Fecha(partes[2]);
 			Hora hora = new Hora(partes[3]);
@@ -200,8 +184,6 @@ public class Loader {
 			autor.añadirRegistroActividad(nuevoRegistro);
 			Actividad actividad = proyecto.getActividades().get(nombre);
 			actividad.añadirRegistro(nuevoRegistro);
-			
-			//TODO Añadir registro a participante y actvidad.
 			
 			linea = br.readLine();
 		}

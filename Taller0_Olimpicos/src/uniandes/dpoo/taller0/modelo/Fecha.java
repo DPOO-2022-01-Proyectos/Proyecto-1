@@ -56,12 +56,12 @@ public class Fecha {
 	 * Construye una fecha e inicializa sus atributos con la información del
 	 * parámetro, el cual es la fecha representada como un caracter.
 	 * 
-	 * @param fechaString
+	 * @param fechaString 2022/20/20
 	 */
 	public Fecha(String fechaString) {
-		this.dia = Integer.parseInt(fechaString.substring(0, 2));
-		this.mes = Integer.parseInt(fechaString.substring(3, 5));
-		this.año = Integer.parseInt(fechaString.substring(6, 8));
+		this.dia = Integer.parseInt(fechaString.substring(0, 4));
+		this.mes = Integer.parseInt(fechaString.substring(5, 7));
+		this.año = Integer.parseInt(fechaString.substring(8, 10));
 	}
 
 	

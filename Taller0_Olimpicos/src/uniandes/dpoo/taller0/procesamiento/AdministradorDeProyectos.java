@@ -180,9 +180,7 @@ public class AdministradorDeProyectos {
 	 * @param cadenaFechaInicio
 	 * @param cadenaFechaFin
 	 */
-	public void crearNuevoProyecto(String nombre, String descripcion, String cadenaFechaInicio, String cadenaFechaFin) {
-		Fecha fechaInicio = new Fecha(cadenaFechaInicio);
-		Fecha fechaFin = new Fecha(cadenaFechaFin);
+	public void crearNuevoProyecto(String nombre, String descripcion, Fecha fechaInicio, Fecha fechaFin) {
 		Proyecto nuevoProyecto = new Proyecto(nombre, descripcion, fechaInicio, fechaFin, participanteActual);
 		añadirProyecto(nuevoProyecto);
 	}
