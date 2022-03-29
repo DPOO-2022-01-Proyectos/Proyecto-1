@@ -80,6 +80,7 @@ public class Actividad {
 		this.fechaRealizacion = fechaRealizacion;
 		this.horaInicio = horaInicio;
 		this.horaFin = horaFin;
+		this.registros = new ArrayList<RegistroActividad>();
 	}
 	
 

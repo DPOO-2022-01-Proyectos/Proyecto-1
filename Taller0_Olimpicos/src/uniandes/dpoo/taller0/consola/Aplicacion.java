@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import uniandes.dpoo.taller0.modelo.Participante;
 import uniandes.dpoo.taller0.procesamiento.AdministradorDeProyectos;
 import uniandes.dpoo.taller0.procesamiento.Cronometro;
+import uniandes.dpoo.taller0.procesamiento.Loader;
 
 /*
  * Esta clase se encarga de la comunicación entre el usuario y la lógica del
@@ -30,7 +31,7 @@ public class Aplicacion {
 	/**
 	 * El administrador de proyectos.
 	 */
-	private AdministradorDeProyectos administradorDeProyectos;
+	private AdministradorDeProyectos adminProy;
 	
 	/**
 	 * El cronómetro.
@@ -51,13 +52,17 @@ public class Aplicacion {
 	 * Método main para ejecutar la aplicación.
 	 * 
 	 * @param args
+	 * @throws IOException 
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		Aplicacion aplicacion = new Aplicacion();
 		aplicacion.ejecutarAplicacion();
 	}
 	
-	private void ejecutarAplicacion() {
+	
+	private void ejecutarAplicacion() throws IOException {
+		adminProy = new AdministradorDeProyectos();
+		Loader.cargarInformacion(adminProy);
 		System.out.println("\nAdministrados de Proyectos\n");
 		
 		// Bucle para el menú principal.
@@ -69,18 +74,15 @@ public class Aplicacion {
 				if (opcion_seleccionada == 1)
 					ejeIniciarSesion();
 
-				else if (opcion_seleccionada == 2)
-				{
+				else if (opcion_seleccionada == 2) {
 					System.out.println("Saliendo de la aplicación ...");
 					continuar = false;
 				}
-				else
-				{
+				else {
 					System.out.println("Por favor seleccione una opción válida.");
 				}
 			}
-			catch (NumberFormatException e)
-			{
+			catch (NumberFormatException e) {
 				System.out.println("Debe seleccionar uno de los números de las opciones.");
 			}
 		}
@@ -105,10 +107,20 @@ public class Aplicacion {
 	// Métodos para ejecutar opciones
 	// ************************************************************************
 	
+	/**
+	 * 
+	 */
 	private void ejeIniciarSesion () {
 		System.out.println("\nInicio de sesión:");
 		String nombre = input(" > Ingrese su nombre");
 		String correo = input(" > Ingrese su correo");
+		Participante participanteActual = adminProy.getParticipantes().get(correo);
+		if (participanteActual == null) {
+			participanteActual = new Participante(nombre, correo);
+			adminProy.añadirParticipanteAMapa(participanteActual);
+		}
+		adminProy.iniciarSesion(participanteActual);
+		System.out.println("\nBienvenido, " + participanteActual.getNombre() + ".");
 	}
 	
 	
@@ -124,16 +136,13 @@ public class Aplicacion {
 	 * 
 	 * @return La cadena de caracteres que el usuario escriba como respuesta.
 	 */
-	public String input(String mensaje)
-	{
-		try
-		{
+	public String input(String mensaje)	{
+		try	{
 			System.out.print(mensaje + ": ");
 			BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 			return reader.readLine();
 		}
-		catch (IOException e)
-		{
+		catch (IOException e) {
 			System.out.println("Error leyendo de la consola");
 			e.printStackTrace();
 		}

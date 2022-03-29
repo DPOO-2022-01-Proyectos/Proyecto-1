@@ -122,13 +122,12 @@ public class AdministradorDeProyectos {
 	// ************************************************************************
 	
 	/**
-	 * Crea y asigna un objeto al atributo participanteActual.
+	 * Asigna un objeto de tipo Participante al atributo participanteActual.
 	 * 
-	 * @param nombre
-	 * @param correo
+	 * @param participante
 	 */
-	public void iniciarSesion(String nombre, String correo) {
-		participanteActual = new Participante(nombre, correo);
+	public void iniciarSesion(Participante participante) {
+		participanteActual = participante;
 	}
 	
 	/**

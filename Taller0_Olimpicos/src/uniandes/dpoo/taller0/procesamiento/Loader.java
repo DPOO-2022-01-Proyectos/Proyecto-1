@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import uniandes.dpoo.taller0.modelo.Actividad;
 import uniandes.dpoo.taller0.modelo.Fecha;
@@ -23,29 +24,53 @@ public class Loader {
 
 	/**
 	 * Carga toda la información llamando a los métodos respectivos a cada archivo.
+	 * 
 	 * @throws IOException 
 	 */
-	public static AdministradorDeProyectos cargarInformacion(AdministradorDeProyectos adminProy) throws IOException {
+	public static AdministradorDeProyectos cargarInformacion(AdministradorDeProyectos adminProyVacio) throws IOException {
+		AdministradorDeProyectos adminProy = adminProyVacio;
 		String archivoParticipantes = System.getProperty("user.dir") + "/data/participantes.txt";
 		String archivoProyectos = System.getProperty("user.dir") + "/data/proyectos.txt";
 		String archivoActividades = System.getProperty("user.dir") + "/data/actividades.txt";
 		String archivoRegistros = System.getProperty("user.dir") + "/data/registros.txt";
 		
-		cargarParticipantes(adminProy, archivoParticipantes);
-		cargarProyectos(adminProy, archivoProyectos);
-		cargarActividades(adminProy, archivoActividades);
-		cargarRegistros(adminProy, archivoRegistros);
+		adminProy = cargarParticipantes(adminProy, archivoParticipantes);
+		adminProy = cargarProyectos(adminProy, archivoProyectos);
+		adminProy = cargarActividades(adminProy, archivoActividades);
+		
+		HashMap<String, Participante> participantes = adminProy.getParticipantes();
+		System.out.println(participantes.get("j.jauregui@uniandes.edu.co").getCorreo());
+		
+		adminProy = cargarRegistros(adminProy, archivoRegistros);
+		
+		HashMap<String, Proyecto> proyectos = adminProy.getProyectos();
+		for (Proyecto proy:proyectos.values()) {
+			System.out.println(proy.getNombre() + ":");
+			for (Actividad act:proy.getActividades().values()) {
+				System.out.println(act.getTitulo() + ":");
+				for (RegistroActividad reg:act.getRegistros()) {
+					System.out.println(reg.getAutor());
+				}
+			}
+		}
 		
 		return adminProy;
 	}
 	
 	/**
+	 * Lee la información del archivo de participantes, crea objetos de tipo Participante
+	 * y los guarda en las estructuras de datos del objeto adminProy pasado por parámetro.
+	 * 
+	 * @param adminProyVacio
+	 * @param archivoParticipantes
 	 * 
 	 * @throws IOException
 	 */
-	private static void cargarParticipantes(AdministradorDeProyectos adminProy, String archivoParticipantes) throws IOException {
+	private static AdministradorDeProyectos cargarParticipantes(AdministradorDeProyectos adminProyVacio, String archivoParticipantes) throws IOException {
+		AdministradorDeProyectos adminProy = adminProyVacio;
 		BufferedReader br = new BufferedReader(new FileReader(archivoParticipantes));
 		String linea = br.readLine();
+		linea = br.readLine();
 		
 		// Leer línea a línea hasta que se llegue a la última.
 		while (linea != null) {
@@ -59,22 +84,26 @@ public class Loader {
 				nuevoParticipante.añadirProyecto(partes[i]);
 			}
 			adminProy.añadirParticipanteAMapa(nuevoParticipante);
-			
 			linea = br.readLine();
-			
-			// TODO Cargar registros.
 		}
 		br.close();
+		return adminProy;
 	}
 	
 	/**
+	 * Lee la información del archivo de proyectos, crea objetos de tipo Proyecto
+	 * y los guarda en las estructuras de datos del objeto adminProy pasado por parámetro.
 	 * 
+	 * @param adminProyVacio
+	 * @param archivoProyectos
 	 * 
 	 * @throws IOException
 	 */
-	private static void cargarProyectos(AdministradorDeProyectos adminProy, String archivoProyectos) throws IOException {
+	private static AdministradorDeProyectos cargarProyectos(AdministradorDeProyectos adminProyVacio, String archivoProyectos) throws IOException {
+		AdministradorDeProyectos adminProy = adminProyVacio;
 		BufferedReader br = new BufferedReader(new FileReader(archivoProyectos));
 		String linea = br.readLine();
+		linea = br.readLine();
 		
 		// Leer línea a línea hasta que se llegue a la última.
 		while (linea != null) {
@@ -97,11 +126,23 @@ public class Loader {
 			linea = br.readLine();
 		}
 		br.close();
+		return adminProy;
 	}	
 	
-	private static void cargarActividades(AdministradorDeProyectos adminProy, String archivoActividades) throws IOException {
+	/**
+	 * Lee la información del archivo de actividades, crea objetos de tipo Actividad
+	 * y los guarda en las estructuras de datos del objeto adminProy pasado por parámetro.
+	 * 
+	 * @param adminProyVacio
+	 * @param archivoActividades
+	 * 
+	 * @throws IOException
+	 */
+	private static AdministradorDeProyectos cargarActividades(AdministradorDeProyectos adminProyVacio, String archivoActividades) throws IOException {
+		AdministradorDeProyectos adminProy = adminProyVacio;
 		BufferedReader br = new BufferedReader(new FileReader(archivoActividades));
 		String linea = br.readLine();
+		linea = br.readLine();
 		
 		// Leer línea a línea hasta que se llegue a la última.
 		while (linea != null) {
@@ -123,11 +164,23 @@ public class Loader {
 			linea = br.readLine();
 		}
 		br.close();
+		return adminProy;
 	}
 	
-	private static void cargarRegistros(AdministradorDeProyectos adminProy, String archivoRegistros) throws IOException {
+	/**
+	 * Lee la información del archivo de registros, crea objetos de tipo RegistroDeActividad
+	 * y los guarda en las estructuras de datos del objeto adminProy pasado por parámetro.
+	 * 
+	 * @param adminProyVacio
+	 * @param archivoRegistros
+	 * 
+	 * @throws IOException
+	 */
+	private static AdministradorDeProyectos cargarRegistros(AdministradorDeProyectos adminProyVacio, String archivoRegistros) throws IOException {
+		AdministradorDeProyectos adminProy = adminProyVacio;
 		BufferedReader br = new BufferedReader(new FileReader(archivoRegistros));
 		String linea = br.readLine();
+		linea = br.readLine();
 		
 		// Leer línea a línea hasta que se llegue a la última.
 		while (linea != null) {
@@ -136,6 +189,7 @@ public class Loader {
 			// Crear el registro y guardarlo.
 			String nombre = partes[0];
 			String correoAutor = partes[1];
+			System.out.println(correoAutor);
 			Participante autor = adminProy.getParticipantes().get(correoAutor);
 			Fecha fecha = new Fecha(partes[2]);
 			Hora hora = new Hora(partes[3]);
@@ -152,8 +206,7 @@ public class Loader {
 			linea = br.readLine();
 		}
 		br.close();
-	}
-	
-	
+		return adminProy;
+	}	
 	
 }
