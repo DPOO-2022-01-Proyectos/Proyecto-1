@@ -1,0 +1,3 @@
+correo;nombre;proyecto1;...;proyecton
+j.cardenast@uniandes.edu.co;Nicolás;Proyecto 1;Proyecto 2
+j.jauregui@uniandes.edu.co;Juan	Manuel;Proyecto 2
