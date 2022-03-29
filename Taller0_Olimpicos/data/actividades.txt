@@ -1,5 +1,5 @@
 nombreProyecto;título;descripción;tipo;fecha;horaI;horaF
-Proyecto 1;Actividad 1;Primera actividad.;documentación;20/03/2022;08:05:00;09:05:00
-Proyecto 1;Actividad 2;Segunda  actividad.;documentación;20/03/2022;10:05:00;11:05:00
-Proyecto 2;Actividad 3;Tercera actividad.;implementación;21/03/2022;12:05:00;13:05:00
-Proyecto 2;Actividad 4;Cuarta actividad.;investigación;21/03/2022;14:05:00;15:05:00
+Proyecto 1;Actividad 1;Primera actividad.;documentación;2022/03/20;08:05:00;09:05:00
+Proyecto 1;Actividad 2;Segunda  actividad.;documentación;2022/03/20;10:05:00;11:05:00
+Proyecto 2;Actividad 3;Tercera actividad.;implementación;2022/03/21;12:05:00;13:05:00
+Proyecto 2;Actividad 4;Cuarta actividad.;investigación;2022/03/21;14:05:00;15:05:00
