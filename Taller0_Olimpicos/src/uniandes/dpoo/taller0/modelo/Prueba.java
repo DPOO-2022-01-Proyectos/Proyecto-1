@@ -8,9 +8,10 @@ import java.time.format.DateTimeFormatter;
 
 public class Prueba {
 	public static void main(String[] args) {
-		String valor = input("> ");
-		if (valor == "")
-			System.out.println("Iguales");
+		String valor = input("Ingrese");
+		if (Integer.parseInt(valor) == 0) {
+			System.out.println("No hubo errores.");
+		}
 	}
 	
 	private static String input(String mensaje)	{

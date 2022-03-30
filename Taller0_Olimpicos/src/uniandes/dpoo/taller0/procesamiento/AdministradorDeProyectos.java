@@ -208,30 +208,6 @@ public class AdministradorDeProyectos {
 	// ************************************************************************
 	
 	/**
-	 * Crea una actividad con la información de los parámetros y la añade a la
-	 * lista de actividades del proyecto actual. También añade a su lista de registros
-	 * un nuevo registro que considera la información registrada, al igual que a
-	 * la lista de registros del participante.
-	 * 
-	 * @param titulo
-	 * @param desripcion
-	 * @param tipo
-	 * @param cadenaFecha
-	 * @param cadenaHoraInicio
-	 * @param cadenaHoraFin
-	 */
-	public void registrarActividad(String titulo, String desripcion, String tipo, String cadenaFecha, String cadenaHoraInicio, String cadenaHoraFin) {
-		Fecha fechaRealizacion = new Fecha(cadenaFecha);
-		Hora horaInicio = new Hora(cadenaHoraInicio);
-		Hora horaFin = new Hora(cadenaHoraFin);
-		Actividad nuevaActividad = new Actividad(titulo, desripcion, tipo, fechaRealizacion, horaInicio, horaFin);
-		RegistroActividad nuevoRegistro = new RegistroActividad(titulo, participanteActual, fechaRealizacion, horaInicio);
-		nuevaActividad.añadirRegistro(nuevoRegistro);
-		proyectoActual.añadirActividad(nuevaActividad);
-		participanteActual.añadirRegistroActividad(nuevoRegistro);
-	}
-	
-	/**
 	 * Añade un nuevo registro de una actividad que ya existe.
 	 * 
 	 * @param actividad
