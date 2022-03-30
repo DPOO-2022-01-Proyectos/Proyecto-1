@@ -235,13 +235,12 @@ public class AdministradorDeProyectos {
 	 * Añade un nuevo registro de una actividad que ya existe.
 	 * 
 	 * @param actividad
+	 * @param participante
 	 * @param cadenaFecha
 	 * @param cadenaHora
 	 */
-	public void registrarActividadExistente(Actividad actividad, String cadenaFecha, String cadenaHora) {
-		Fecha fecha = new Fecha(cadenaFecha);
-		Hora hora = new Hora(cadenaHora);
-		RegistroActividad nuevoRegistro = new RegistroActividad(actividad.getTitulo(), participanteActual, fecha, hora);
+	public void registrarActividad(Actividad actividad, Participante participante, Fecha fecha, Hora hora) {
+		RegistroActividad nuevoRegistro = new RegistroActividad(actividad.getTitulo(), participante, fecha, hora);
 		actividad.añadirRegistro(nuevoRegistro);
 		participanteActual.añadirRegistroActividad(nuevoRegistro);
 	}

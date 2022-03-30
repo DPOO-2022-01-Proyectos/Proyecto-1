@@ -165,7 +165,7 @@ public class Cronometro {
 	 * 
 	 * @return La hora actual.
 	 */
-	private Hora darHoraActual () {
+	public Hora darHoraActual () {
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
 		Hora horaActual = new Hora(dtf.format(LocalDateTime.now()).substring(11, 19));
 		return horaActual;

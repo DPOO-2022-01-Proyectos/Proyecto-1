@@ -3,9 +3,13 @@ package uniandes.dpoo.taller0.consola;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
+import uniandes.dpoo.taller0.modelo.Actividad;
 import uniandes.dpoo.taller0.modelo.Fecha;
+import uniandes.dpoo.taller0.modelo.Hora;
 import uniandes.dpoo.taller0.modelo.Participante;
 import uniandes.dpoo.taller0.modelo.Proyecto;
 import uniandes.dpoo.taller0.procesamiento.AdministradorDeProyectos;
@@ -86,7 +90,7 @@ public class Aplicacion {
 				}
 
 				else if (opcion_seleccionada == 2) {
-					System.out.println("Saliendo de la aplicación ...");
+					System.out.println("\n< Gracias por usar la aplicación. Adiós.");
 					continuar = false;
 				}
 				else {
@@ -117,20 +121,29 @@ public class Aplicacion {
 	 * Imprime el menú de proyectos.
 	 */
 	private void impMenuProyectos() {
-		System.out.println("¿Qué desea hacer?");
+		System.out.println("\n¿Qué desea hacer?");
 		System.out.println(" 1- Crear nuevo proyecto.");
 		System.out.println(" 2- Manipular proyecto existente.");
+		System.out.println(" 3- Regresar.");
 	}
 	
 	/**
 	 * Imprime el menú de manipulación de proyectos.
 	 */
 	private void impMenuManipularProyectos() {
-		System.out.println("¿Qué desea hacer?");
+		System.out.println("\n¿Qué desea hacer?");
 		System.out.println(" 1- Añadir participante.");
 		System.out.println(" 2- Registrar la realización de una actividad.");
+		System.out.println(" 3- Regresar.");
 	}
 	
+	private void impMenuRegistroActividad(int opcion) {
+		if (opcion == 1) {
+			System.out.println("\nDesea realizar el registro de una activdad:");
+			System.out.println(" 1- Nueva.");
+			System.out.println(" 2- Existente.");
+		}
+	}
 	
 	// ************************************************************************
 	// Métodos para ejecutar opciones
@@ -155,10 +168,10 @@ public class Aplicacion {
 		}
 		
 		// TODO Velocidad.
-		// participanteActual = adminProy.getParticipantes().get("j.cardenast@uniandes.edu.co");
+		participanteActual = adminProy.getParticipantes().get("j.cardenast@uniandes.edu.co");
 		
 		adminProy.iniciarSesion(participanteActual);
-		System.out.println("\n< Bienvenido, " + participanteActual.getNombre() + ".\n");
+		System.out.println("\n< Bienvenido, " + participanteActual.getNombre() + ".");
 	}
 	
 	/**
@@ -166,14 +179,30 @@ public class Aplicacion {
 	 * entre dos opciones.
 	 */
 	private void ejeProyectos() {
-		impMenuProyectos();
-		int opcionSeleccionada = Integer.parseInt(input("> Escoja una opción"));
-		if (opcionSeleccionada == 1) {
-			ejeCrearProyecto();
-			ejeManipularProyecto();
-		}
-		else if (opcionSeleccionada == 2) {
-			buscarProyecto();
+		boolean seguir = true;
+		while (seguir) {
+			impMenuProyectos();
+			int opcionSeleccionada = Integer.parseInt(input("> Escoja una opción"));
+			if (opcionSeleccionada == 1) {
+				ejeCrearProyecto();
+				ejeManipularProyecto();
+			}
+			else if (opcionSeleccionada == 2) {
+				ArrayList<String> proyectos = adminProy.getParticipanteActual().getProyectos();
+				if (proyectos.size() == 0)
+					System.out.println("\n< ERROR: usted aún no pertenece a ningún proyecto. Escoja otra opción.\n");
+				else {
+					buscarProyecto(proyectos);
+					ejeManipularProyecto();
+				}
+			}
+			else if (opcionSeleccionada == 3) {
+				seguir = false;
+				System.out.println();
+				System.out.println("--------------------------------------------------------");
+				System.out.println("-------------- Administrador de Proyectos --------------".toUpperCase());
+				System.out.println("--------------------------------------------------------\n");
+			}
 		}
 	}
 	
@@ -198,72 +227,208 @@ public class Aplicacion {
 				adminProy.abrirProyecto(nombre);
 				
 				infoNoEsValida = false;
+				System.out.println("\n< Proyecto '" + nombre + "' creado exitosamente.");
 			}
+			catch (Exception e) {
+				System.out.println("\n< ERROR: por favor, ingrese fechas válidas.");
+			}
+		}
+	}
+	
+	/**
+	 * Busca un proyecto entre la lista de proyectos del usuario actual.
+	 * Si la búsqueda
+	 * 
+	 * @param proyectos
+	 */
+	private void buscarProyecto(ArrayList<String> proyectos) {
+		System.out.println("\n-------------------------------------------------------------");
+		System.out.println("------------------ Escogencia de Proyectos ------------------");
+		System.out.println("-------------------------------------------------------------");
+		
+		boolean invalido = true;
+		while (invalido) {
+			System.out.println("\nEstos son los proyecto a los que pertenece:");
+			for (int i = 0; i < proyectos.size(); i++) {
+				System.out.println(" " + (i + 1) + "- " + proyectos.get(i) + ".");
+			}
+			int opcionSeleccionada = Integer.parseInt(input("> Escoja uno"));
+			try {
+				adminProy.abrirProyecto(proyectos.get(opcionSeleccionada - 1));
+				invalido = false;
+				System.out.println("\n< Proyecto escogido: " + proyectos.get(opcionSeleccionada - 1) + ".");
+			}
+			catch (Exception e) {
+				System.out.println("\n< ERROR: ingrese un número adecuado.");
+			}
+		}
+	}
+	
+	/**
+	 * Determina las acciones a seguir según la opción que el usuario escoja relacionada
+	 * a la manipulación de proyectos.
+	 */
+	private void ejeManipularProyecto() {
+		System.out.println("\n-------------------------------------------------------------");
+		System.out.println("----------------- Manipulación de Proyectos -----------------");
+		System.out.println("-------------------------------------------------------------");
+		
+		boolean seguir = true;
+		while (seguir ) {
+			impMenuManipularProyectos();
+			int opcionSeleccionada = Integer.parseInt(input("> Escoja una opción"));
+			
+			if (opcionSeleccionada == 1) {
+				System.out.println("\nIngrese la siguiente información del nuevo participante:");
+				String nombre = input(" > Nombre");
+				String correo = input(" > Correo");
+				Participante nuevoParticipante = adminProy.getParticipantes().get(correo);
+				if (nuevoParticipante == null) {
+					adminProy.añadirParticipante(nombre, correo);
+					System.out.println("\n< Participante añadido con éxito.");
+				}
+				else {
+					System.out.println("\n< ERROR: este participante ya hace parte del proyecto.");
+				}
+				
+			}
+			else if (opcionSeleccionada == 2) {
+				ejeRegistrarActividad();
+			}
+			else if (opcionSeleccionada == 3) {
+				seguir = false;
+				System.out.println("\n------------------------------------------------------------");
+				System.out.println("---------------------- Menú Proyectos ----------------------");
+				System.out.println("------------------------------------------------------------");
+			}
+		}
+	}
+	
+	private void ejeRegistrarActividad() {
+		System.out.println("\n-------------------------------------------------------------");
+		System.out.println("--------------------- Registro Actividad --------------------");
+		System.out.println("-------------------------------------------------------------");
+		
+		boolean seguir = true;
+		while (seguir) {
+			impMenuRegistroActividad(1);
+			int opcionSeleccionada = Integer.parseInt(input("> Escoja una opción"));
+			if (opcionSeleccionada == 1) {
+				Actividad nuevaActividad = ejeCrearActividad();
+				ejeCrearRegistro(nuevaActividad);
+				seguir = false;
+				System.out.println("\n-------------------------------------------------------------");
+				System.out.println("----------------- Manipulación de Proyectos -----------------");
+				System.out.println("-------------------------------------------------------------");
+			}
+		}
+	}
+	
+	private void ejeCrearRegistro(Actividad actividad) {
+		System.out.println("\n------------------------------------------------------------");
+		System.out.println("--------------------- Creación Registro --------------------");
+		System.out.println("------------------------------------------------------------");
+
+		boolean seguir = true;
+		while (seguir) {
+			System.out.println("\nIngrese la siguiente información del registro:");
+			System.out.println("(ACLARACIÓN) Ingrese en 'Fecha' y 'Hora' el número '0' si son las actuales.");
+			
+			// Bloque para fecha por defecto.
+			Fecha fecha;
+			String textoFecha = input(" > Fecha (yyyy/MM/dd)");
+			if (Integer.parseInt(textoFecha) == 0) {
+				fecha = darFechaActual();
+			}
+			else {
+				fecha = new Fecha(textoFecha);
+			}
+			
+			// Bloque para hora por defecto.
+			Hora hora;
+			String textoHoraInicio = input(" > Hora inicio (HH:mm:ss)");
+			if (Integer.parseInt(textoHoraInicio) == 0)
+				hora = darHoraActual();
+			else
+				hora = new Hora(textoHoraInicio);
+			
+			// Bloque para participante.
+			Participante participante;
+			String correoParticipante = input(" > Correo del autor ('0' si es usted)");
+			participante = adminProy.getParticipantes().get(correoParticipante);
+			System.out.println("ERRORRRRRRRRRRRRRRRRRRR");
+			if (Integer.parseInt(correoParticipante) == 0) {
+				participante = adminProy.getParticipanteActual();
+				adminProy.registrarActividad(actividad, participante, fecha, hora);
+				System.out.println("\n< Registro exitoso.");
+				seguir = false;
+			}
+			//else {
+			if (participante == null) {
+				System.out.println("No existe");
+			}
+				if (participante == null) {
+					System.out.println("\n< ERROR: este participante no hace parte del proyecto. Regístrelo primero.");
+				}
+				else {
+					adminProy.registrarActividad(actividad, participante, fecha, hora);
+					System.out.println("\n< Registro exitoso.");
+					seguir = false;
+				}
+			//}			
+		}
+	}
+	
+	/**
+	 * Crea una actividad con la información suministrada por el usuario.
+	 * 
+	 * @return La actividad creada.
+	 */
+	private Actividad ejeCrearActividad() {
+		System.out.println("\n----------------------------------------------------------");
+		System.out.println("--------------------- Nueva Actividad --------------------");
+		System.out.println("----------------------------------------------------------");
+		
+		Actividad nuevaActividad = null;
+		boolean seguir = true;
+		while (seguir) {
+			try {
+				System.out.println("\nIngrese la siguiente información de la actividad:");
+				System.out.println("(ACLARACIÓN) Ingrese en 'Fecha' y 'Hora inicio' el número '0' si son las actuales.");
+				String titulo = input(" > Título");
+				String descripcion = input(" > Breve descripción");
+				String tipo = input(" > Tipo");
+				
+				// Bloque para fecha por defecto.
+				Fecha fecha;
+				String textoFecha = input(" > Fecha (yyyy/MM/dd)");
+				if (Integer.parseInt(textoFecha) == 0) {
+					fecha = darFechaActual();
+				}
+				else {
+					fecha = new Fecha(textoFecha);
+				}
+				
+				// Bloque para hora por defecto.
+				Hora horaInicio;
+				String textoHoraInicio = input(" > Hora inicio (HH:mm:ss)");
+				if (Integer.parseInt(textoHoraInicio) == 0)
+					horaInicio = darHoraActual();
+				else
+					horaInicio= new Hora(textoHoraInicio);
+				
+				Hora horaFin = new Hora(input(" > Hora de finalización (HH:mm:ss)"));			
+				nuevaActividad = new Actividad(titulo, descripcion, tipo, fecha, horaInicio, horaFin);
+				adminProy.getProyectoActual().añadirActividad(nuevaActividad);
+				System.out.println("\n< Actividad '" + titulo + "' registrada exitosamente.");
+				seguir = false;
+				}
+			
 			catch (Exception e) {
 				System.out.println("\n< ERROR: por favor, ingrese fechas y horas válidas.");
 			}
 		}
-	}
-	
-	/*
-	 * Busca un proyecto entre la lista de proyectos del usuario actual.
-	 * Si la búsqueda
-	 */
-	private void buscarProyecto() {
-		ArrayList<String> proyectos = adminProy.getParticipanteActual().getProyectos();
-		if (proyectos.size() == 0) {
-			System.out.println("\n< ERROR: usted aún no pertenece a ningún proyecto.");
-		}
-		
-		else {	
-			System.out.println("\n-------------------------------------------------------------");
-			System.out.println("------------------ Escogencia de Proyectos ------------------");
-			System.out.println("-------------------------------------------------------------");
-			
-			boolean invalido = true;
-			while (invalido) {
-				System.out.println("\nEstos son los proyecto a los que pertenece:");
-				for (int i = 0; i < proyectos.size(); i++) {
-					System.out.println(" " + (i + 1) + "- " + proyectos.get(i) + ".");
-				}
-				int opcionSeleccionada = Integer.parseInt(input("> Escoja uno"));
-				try {
-					adminProy.abrirProyecto(proyectos.get(opcionSeleccionada - 1));
-					invalido = false;
-					System.out.println("\n< Proyecto escogido: " + proyectos.get(opcionSeleccionada - 1) + ".");
-				}
-				catch (Exception e) {
-					System.out.println("\n< ERROR: ingrese un número adecuado.");
-				}
-			}
-			ejeManipularProyecto();
-		}
-	}
-	
-	private void ejeManipularProyecto() {
-		System.out.println("\n-------------------------------------------------------------");
-		System.out.println("----------------- Manipulación de Proyectos -----------------");
-		System.out.println("-------------------------------------------------------------\n");
-		
-		impMenuManipularProyectos();
-		int opcionSeleccionada = Integer.parseInt(input("> Escoja una opción"));
-		if (opcionSeleccionada == 1) {
-			System.out.println("\nIngrese la siguiente información del nuevo participante:");
-			String nombre = input(" > Nombre");
-			String correo = input(" > Correo");
-			Participante nuevoParticipante = adminProy.getParticipantes().get(correo);
-			if (nuevoParticipante == null) {
-				adminProy.añadirParticipante(nombre, correo);
-			}
-			else {
-				System.out.println("\n < ERROR: este participante ya hace parte del proyecto.");
-			}
-		}
-		else if (opcionSeleccionada == 2) {
-			ejeManipularProyecto();
-		}
-		
-		
+		return nuevaActividad;
 	}
 	
 	
@@ -290,6 +455,28 @@ public class Aplicacion {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	/**
+	 * Calcula y retorna la fecha actual expresada como un objeto de tipo Fecha.
+	 * 
+	 * @return La fecha actual.
+	 */
+	public static Fecha darFechaActual () {
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+		Fecha fechaActual = new Fecha(dtf.format(LocalDateTime.now()).substring(0, 10));
+		return fechaActual;
+	}
+	
+	/**
+	 * Calcula y retorna la hora actual expresada como un objeto de tipo Hora.
+	 * 
+	 * @return La hora actual.
+	 */
+	public static Hora darHoraActual () {
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+		Hora horaActual = new Hora(dtf.format(LocalDateTime.now()).substring(11, 19));
+		return horaActual;
 	}
 	
 }
