@@ -12,6 +12,7 @@ import uniandes.dpoo.taller0.modelo.Actividad;
 import uniandes.dpoo.taller0.modelo.Fecha;
 import uniandes.dpoo.taller0.modelo.Hora;
 import uniandes.dpoo.taller0.modelo.Participante;
+import uniandes.dpoo.taller0.modelo.Proyecto;
 import uniandes.dpoo.taller0.procesamiento.AdministradorDeProyectos;
 import uniandes.dpoo.taller0.procesamiento.Cronometro;
 import uniandes.dpoo.taller0.procesamiento.Loader;
@@ -27,7 +28,8 @@ public class Aplicacion {
 	// ************************************************************************
 
 	/*
-	 * > 
+	 * > Revisar por qué no se guardan los proyectos nuevos y sus participantes.
+	 * 
 	 */
 
 
@@ -68,7 +70,6 @@ public class Aplicacion {
 	
 	
 	private void ejecutarAplicacion() throws IOException {
-		
 		// Cargar información.
 		adminProy = new AdministradorDeProyectos();
 		adminProy = Loader.cargarInformacion(adminProy);
@@ -82,25 +83,28 @@ public class Aplicacion {
 				impMenuPrincipal();
 				int opcion_seleccionada = Integer.parseInt(input("> Escoja una opción"));
 				
+				// Iniciar sesión.
 				if (opcion_seleccionada == 1) {
-					ejeIniciarSesion();
-					ejeProyectos();
+					ejeIniciarSesion(); impHeader(5); ejeProyectos();
 				}
-
+				
+				// Salir.
 				else if (opcion_seleccionada == 2) {
 					System.out.println("\n< Gracias por usar la aplicación. Adiós.");
 					continuar = false;
 				}
+				
+				// Opción inválida.
 				else {
 					System.out.println("\n< ERROR: por favor, escoja una opción válida.");
 				}
+				
 			}
 			catch (NumberFormatException e) {
 				System.out.println("\n< ERROR FATAL: debe introducir una opción válida.");
 				continuar = false;
 			}
 		}
-		
 	}
 
 	// ************************************************************************
@@ -196,11 +200,6 @@ public class Aplicacion {
 				System.out.println("--------------------- Creación Registro --------------------");
 				System.out.println("------------------------------------------------------------");
 				break;
-			case 10:
-				System.out.println("\n------------------------------------------------------------");
-				System.out.println("---------------------- Menú Proyectos ----------------------");
-				System.out.println("------------------------------------------------------------");
-				break;
 		}
 	}
 	
@@ -245,24 +244,24 @@ public class Aplicacion {
 		while (seguir) {
 			impMenuProyectos();
 			int opcionSeleccionada = Integer.parseInt(input("> Escoja una opción"));
+			
+			// Crear nuevo proyecto.
 			if (opcionSeleccionada == 1) {
-				ejeCrearProyecto();
-				ejeManipularProyecto();
+				ejeCrearProyecto(); ejeManipularProyecto();
 			}
+			
+			// Manipular proyecto existente.
 			else if (opcionSeleccionada == 2) {
 				ArrayList<String> proyectos = adminProy.getParticipanteActual().getProyectos();
 				if (proyectos.size() == 0)
 					System.out.println("\n< ERROR: usted aún no pertenece a ningún proyecto. Escoja otra opción.\n");
-				else {
-					buscarProyecto(proyectos);
-					ejeManipularProyecto();
-				}
+				else
+					buscarProyecto(proyectos); ejeManipularProyecto();
 			}
-			else if (opcionSeleccionada == 3) {
-				seguir = false;
-				System.out.println();
-				impHeader(1);
-			}
+			
+			// Regresar.
+			else if (opcionSeleccionada == 3)
+				seguir = false; System.out.println(); impHeader(1);
 		}
 	}
 	
@@ -270,8 +269,7 @@ public class Aplicacion {
 	 * Crea un proyecto con la información ingresada por el usuario.
 	 */
 	private void ejeCrearProyecto () {
-		impHeader(3);
-		boolean infoNoEsValida = true;
+		impHeader(3); boolean infoNoEsValida = true;
 		while (infoNoEsValida) {
 			try {
 				System.out.println("\nIngrese la siguiente información de su proyecto:");
@@ -283,8 +281,8 @@ public class Aplicacion {
 				adminProy.crearNuevoProyecto(nombre, descripcion, fechaInicio, fechaFin);
 				adminProy.abrirProyecto(nombre);
 				
-				infoNoEsValida = false;
 				System.out.println("\n< Proyecto '" + nombre + "' creado exitosamente.");
+				infoNoEsValida = false;				
 			}
 			catch (Exception e) {
 				System.out.println("\n< ERROR: por favor, ingrese fechas válidas.");
@@ -294,7 +292,6 @@ public class Aplicacion {
 	
 	/**
 	 * Busca un proyecto entre la lista de proyectos del usuario actual.
-	 * Si la búsqueda
 	 * 
 	 * @param proyectos
 	 */
@@ -303,13 +300,12 @@ public class Aplicacion {
 		boolean invalido = true;
 		while (invalido) {
 			System.out.println("\nEstos son los proyecto a los que pertenece:");
-			for (int i = 0; i < proyectos.size(); i++) {
+			for (int i = 0; i < proyectos.size(); i++)
 				System.out.println(" " + (i + 1) + "- " + proyectos.get(i) + ".");
-			}
+
 			int opcionSeleccionada = Integer.parseInt(input("> Escoja uno"));
 			try {
-				adminProy.abrirProyecto(proyectos.get(opcionSeleccionada - 1));
-				invalido = false;
+				adminProy.abrirProyecto(proyectos.get(opcionSeleccionada - 1)); invalido = false;
 				System.out.println("\n< Proyecto escogido: " + proyectos.get(opcionSeleccionada - 1) + ".");
 			}
 			catch (Exception e) {
@@ -329,27 +325,34 @@ public class Aplicacion {
 			impMenuManipularProyectos();
 			int opcionSeleccionada = Integer.parseInt(input("> Escoja una opción"));
 			
-			if (opcionSeleccionada == 1) {
-				System.out.println("\nIngrese la siguiente información del nuevo participante:");
-				String nombre = input(" > Nombre");
-				String correo = input(" > Correo");
-				Participante nuevoParticipante = adminProy.getParticipantes().get(correo);
-				if (nuevoParticipante == null) {
-					adminProy.añadirParticipante(nombre, correo);
-					System.out.println("\n< Participante añadido con éxito.");
-				}
-				else {
-					System.out.println("\n< ERROR: este participante ya hace parte del proyecto.");
-				}
-				
-			}
-			else if (opcionSeleccionada == 2) {
+			if (opcionSeleccionada == 1)
+				añadirParticipante();
+			else if (opcionSeleccionada == 2)
 				ejeRegistrarActividad();
-			}
-			else if (opcionSeleccionada == 3) {
-				seguir = false;
-				impHeader(10);
-			}
+			else if (opcionSeleccionada == 3)
+				seguir = false; impHeader(5);
+		}
+	}
+	
+	
+	// ************************************************************************
+	// Métodos de los participantes
+	// ************************************************************************
+	
+	/**
+	 * Añade un participante al proyecto actual.
+	 */
+	private void añadirParticipante() {
+		System.out.println("\nIngrese la siguiente información del nuevo participante:");
+		String nombre = input(" > Nombre");
+		String correo = input(" > Correo");
+		Participante participante = adminProy.getProyectoActual().getParticipantes().get(correo);
+		if (participante == null) {
+			adminProy.añadirParticipante(nombre, correo);
+			System.out.println("\n< Participante añadido con éxito.");
+		}
+		else {
+			System.out.println("\n< ERROR: este participante ya hace parte del proyecto.");
 		}
 	}
 	
@@ -378,12 +381,10 @@ public class Aplicacion {
 				// Bloque para fecha por defecto.
 				Fecha fecha;
 				String textoFecha = input(" > Fecha (yyyy/MM/dd)");
-				if (Integer.parseInt(textoFecha) == 0) {
+				if (Integer.parseInt(textoFecha) == 0)
 					fecha = darFechaActual();
-				}
-				else {
+				else
 					fecha = new Fecha(textoFecha);
-				}
 				
 				// Bloque para hora por defecto.
 				Hora horaInicio;
@@ -415,6 +416,7 @@ public class Aplicacion {
 	private Actividad buscarActividad() {				
 		Actividad actividadEscogida = null;
 		boolean invalido = true;
+		
 		while (invalido) {
 			
 			HashMap<String, Actividad> actividades = adminProy.getProyectoActual().getActividades();
@@ -424,7 +426,6 @@ public class Aplicacion {
 			if (actividades.size() == 0) {
 				System.out.println("\n< ERROR: este proyecto aún no tiene actividades. Cree al menos una.");
 				invalido = false;
-				impHeader(5);
 			}
 			
 			// El proyecto tiene actividades.
@@ -438,12 +439,17 @@ public class Aplicacion {
 				}
 				int opcionSeleccionada = Integer.parseInt(input("> Escoja una"));
 				try {
-					actividadEscogida = listaActividades.get(opcionSeleccionada);
-					invalido = false;
-					System.out.println("\n< Actividad escogida: " + listaActividades.get(opcionSeleccionada - 1).getTitulo() + ".");
+					switch (opcionSeleccionada) {
+						case 0:
+							System.out.println("\n< ERROR: ingrese un número adecuado."); break;
+						default:
+							actividadEscogida = listaActividades.get(opcionSeleccionada - 1);
+							invalido = false;
+							System.out.println("\n< Actividad escogida: " + listaActividades.get(opcionSeleccionada - 1).getTitulo() + ".");
+							break;
+					}
 				}
 				catch (Exception e) {
-
 					System.out.println("\n< ERROR: ingrese un número adecuado.");
 				}
 			}
@@ -467,9 +473,7 @@ public class Aplicacion {
 			// Si la actividad es nueva.
 			if (opcionSeleccionada == 1) {
 				Actividad nuevaActividad = ejeCrearActividad();
-				ejeCrearRegistro(nuevaActividad);
-				seguir = false;
-				impHeader(5);
+				ejeCrearRegistro(nuevaActividad); seguir = false;
 			}
 			
 			// Si la actividad ya existe.
@@ -478,14 +482,10 @@ public class Aplicacion {
 				Actividad actividadExistente = buscarActividad();
 				
 				// Verificar que se haya encontrado la actividad.
-				if (actividadExistente == null) {
+				if (actividadExistente == null)
 					seguir = false;
-				}
-				else {
-					ejeCrearRegistro(actividadExistente);
-					seguir = false;
-					impHeader(5);	
-				}				
+				else
+					ejeCrearRegistro(actividadExistente); seguir = false;			
 			}
 			
 			// Regresar.

@@ -141,6 +141,11 @@ public class AdministradorDeProyectos {
 		proyectoActual.añadirParticipante(nuevoParticipante);
 	}
 	
+	/**
+	 * Añade un participante a la tabla de Hash de participantes.
+	 * 
+	 * @param participante
+	 */
 	public void añadirParticipanteAMapa(Participante participante) {
 		participantes.put(participante.getCorreo(), participante);
 	}
@@ -182,6 +187,8 @@ public class AdministradorDeProyectos {
 	 */
 	public void crearNuevoProyecto(String nombre, String descripcion, Fecha fechaInicio, Fecha fechaFin) {
 		Proyecto nuevoProyecto = new Proyecto(nombre, descripcion, fechaInicio, fechaFin, participanteActual);
+		nuevoProyecto.añadirParticipante(participanteActual);
+		participanteActual.añadirProyecto(nombre);
 		añadirProyecto(nuevoProyecto);
 	}
 	
