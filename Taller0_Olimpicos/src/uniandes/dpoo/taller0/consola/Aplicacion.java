@@ -68,11 +68,18 @@ public class Aplicacion {
 		aplicacion.ejecutarAplicacion();
 	}
 	
-	
+	/**
+	 * Invoca los métodos para ejecutar la aplicación.
+	 * 
+	 * @throws IOException
+	 */
 	private void ejecutarAplicacion() throws IOException {
 		// Cargar información.
 		adminProy = new AdministradorDeProyectos();
 		adminProy = Loader.cargarInformacion(adminProy);
+		
+		// Crear cronómetro y calculadora estadística.
+		cronometro = new Cronometro();
 		
 		impHeader(1);
 		
@@ -139,12 +146,31 @@ public class Aplicacion {
 		System.out.println(" 3- Regresar.");
 	}
 	
+	/**
+	 * Imprime el menú para realizar el registro de una actividad.
+	 * 
+	 * @param opcion
+	 */
 	private void impMenuRegistroActividad(int opcion) {
 		if (opcion == 1) {
 			System.out.println("\nDesea realizar el registro de una activdad:");
 			System.out.println(" 1- Nueva.");
 			System.out.println(" 2- Existente.");
 			System.out.println(" 3- Regresar.");
+			System.out.println(" 4- Usar el cronómetro.");
+		}
+	}
+	
+	/**
+	 * Imprime el menú del cronómetro.
+	 * 
+	 * @param opcion
+	 */
+	private void impCronometro(int opcion) {
+		if (opcion == 1) {
+			System.out.println("\nOpciones del cronómetro:");
+			System.out.println(" 1- Iniciar.");
+			System.out.println(" 2- Regresar.");
 		}
 	}
 	
@@ -254,7 +280,7 @@ public class Aplicacion {
 			else if (opcionSeleccionada == 2) {
 				ArrayList<String> proyectos = adminProy.getParticipanteActual().getProyectos();
 				if (proyectos.size() == 0)
-					System.out.println("\n< ERROR: usted aún no pertenece a ningún proyecto. Escoja otra opción.\n");
+					System.out.println("\n< ERROR: usted aún no pertenece a ningún proyecto. Escoja otra opción.");
 				else
 					buscarProyecto(proyectos); ejeManipularProyecto();
 			}
@@ -463,6 +489,10 @@ public class Aplicacion {
 	// Métodos de los registros
 	// ************************************************************************
 	
+	/**
+	 * Invoa el método que permite crear el regitro de una actividad (dependiendo si
+	 * esta existe o no).
+	 */
 	private void ejeRegistrarActividad() {
 		impHeader(6);
 		boolean seguir = true;
@@ -489,12 +519,21 @@ public class Aplicacion {
 			}
 			
 			// Regresar.
-			else if (opcionSeleccionada == 3)
-				impHeader(5);
-				seguir = false;
+			else if (opcionSeleccionada == 3) {
+				impHeader(5); seguir = false;
+			}
+				
+			else if (opcionSeleccionada == 4) {
+				ejeCronometro();
+			}
 		}
 	}
 	
+	/**
+	 * Crea un registro de una actividad que hace parte del proyecto atual.
+	 * 
+	 * @param actividad
+	 */
 	private void ejeCrearRegistro(Actividad actividad) {
 		impHeader(9);
 		boolean seguir = true;
@@ -521,9 +560,8 @@ public class Aplicacion {
 				hora = new Hora(textoHoraInicio);
 			
 			// Bloque para participante.
-			Participante participante;
 			String correoParticipante = input(" > Correo del autor ('0' si es usted)");
-			participante = adminProy.getParticipantes().get(correoParticipante);
+			Participante participante = adminProy.getProyectoActual().getParticipantes().get(correoParticipante);
 			
 			// Manejo de error para el método parseInt().
 			try {
@@ -549,6 +587,13 @@ public class Aplicacion {
 	}
 	
 	
+	// ************************************************************************
+	// Métodos del cronómetro
+	// ************************************************************************
+	
+	private void ejeCronometro() {
+		
+	}
 	
 	// ************************************************************************
 	// Otros métodos
