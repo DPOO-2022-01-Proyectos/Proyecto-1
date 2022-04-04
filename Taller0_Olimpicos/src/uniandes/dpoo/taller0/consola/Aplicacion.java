@@ -14,6 +14,7 @@ import uniandes.dpoo.taller0.modelo.Hora;
 import uniandes.dpoo.taller0.modelo.Participante;
 import uniandes.dpoo.taller0.modelo.Proyecto;
 import uniandes.dpoo.taller0.procesamiento.AdministradorDeProyectos;
+import uniandes.dpoo.taller0.procesamiento.Calculadora;
 import uniandes.dpoo.taller0.procesamiento.Cronometro;
 import uniandes.dpoo.taller0.procesamiento.Loader;
 
@@ -48,6 +49,11 @@ public class Aplicacion {
 	private Cronometro cronometro;
 	
 	/**
+	 * La calculadroa estadística.
+	 */
+	private Calculadora calc;
+	
+	/**
 	 * La calculadora de estadísticas.
 	 */
 	//private Calculadora calculadora;
@@ -80,6 +86,7 @@ public class Aplicacion {
 		
 		// Crear cronómetro y calculadora estadística.
 		cronometro = new Cronometro();
+		calc = new Calculadora();
 		
 		impHeader(1);
 		
@@ -134,6 +141,7 @@ public class Aplicacion {
 		System.out.println(" 1- Crear nuevo proyecto.");
 		System.out.println(" 2- Manipular proyecto existente.");
 		System.out.println(" 3- Regresar.");
+		System.out.println(" 4- Revisar estadísticas.");
 	}
 	
 	/**
@@ -162,16 +170,39 @@ public class Aplicacion {
 	}
 	
 	/**
-	 * Imprime el menú del cronómetro.
-	 * 
-	 * @param opcion
+	 * Imprime el menú para iniciar cronómetro.
 	 */
-	private void impCronometro(int opcion) {
-		if (opcion == 1) {
-			System.out.println("\nOpciones del cronómetro:");
-			System.out.println(" 1- Iniciar.");
-			System.out.println(" 2- Regresar.");
-		}
+	private void impCronometroIniciar() {
+		System.out.println("\nOpciones del cronómetro:");
+		System.out.println(" 1- Iniciar.");
+		System.out.println(" 2- Regresar.");
+	}
+	
+	/**
+	 * Imprime el menú para pausar cronómetro.
+	 */
+	private void impCronometroPausar() {
+		System.out.println("\nOpciones del cronómetro:");
+		System.out.println(" 1- Pausar.");
+		System.out.println(" 2- Terminar.");
+	}
+	
+	/**
+	 * Imprime el menú para continuar cronómetro.
+	 */
+	private void impCronometroContinuar() {
+		System.out.println("\nOpciones del cronómetro:");
+		System.out.println(" 1- Continuar.");
+		System.out.println(" 2- Terminar.");
+	}
+	
+	/**
+	 * Imprime menu estadísticas.
+	 */
+	private void impEstadisticas() {
+		System.out.println("\n¿Qué desea hacer?");
+		System.out.println(" 1- Calcular tiempo total invertido.");
+		System.out.println(" 2- Regresar.");
 	}
 	
 	/**
@@ -225,6 +256,16 @@ public class Aplicacion {
 				System.out.println("\n------------------------------------------------------------");
 				System.out.println("--------------------- Creación Registro --------------------");
 				System.out.println("------------------------------------------------------------");
+				break;
+			case 10:
+				System.out.println("\n------------------------------------------------------------");
+				System.out.println("------------------------- Cronómetro -----------------------");
+				System.out.println("------------------------------------------------------------");
+				break;
+			case 11:
+				System.out.println("\n--------------------------------------------------------------");
+				System.out.println("------------------------- Estadísticas -----------------------");
+				System.out.println("--------------------------------------------------------------");
 				break;
 		}
 	}
@@ -286,8 +327,20 @@ public class Aplicacion {
 			}
 			
 			// Regresar.
-			else if (opcionSeleccionada == 3)
+			else if (opcionSeleccionada == 3) {
 				seguir = false; System.out.println(); impHeader(1);
+			}
+			
+			// Calcular esadísticas.
+			else if (opcionSeleccionada == 4) {
+				ArrayList<String> proyectos = adminProy.getParticipanteActual().getProyectos();
+				if (proyectos.size() == 0)
+					System.out.println("\n< ERROR: usted aún no pertenece a ningún proyecto. Escoja otra opción.");
+				else
+					ejeEstadisticas();
+			}
+				
+				
 		}
 	}
 	
@@ -522,9 +575,10 @@ public class Aplicacion {
 			else if (opcionSeleccionada == 3) {
 				impHeader(5); seguir = false;
 			}
-				
+			
+			// Cronómetro.
 			else if (opcionSeleccionada == 4) {
-				ejeCronometro();
+				impHeader(10); ejeCronometro(); seguir = false;
 			}
 		}
 	}
@@ -591,8 +645,149 @@ public class Aplicacion {
 	// Métodos del cronómetro
 	// ************************************************************************
 	
+	/**
+	 * Ejecuta el cronómetro
+	 */
 	private void ejeCronometro() {
-		
+		impCronometroIniciar();
+		boolean error = true;
+		while (error) {
+			int opcion = Integer.parseInt(input("> Escoja una opción"));
+			
+			// Inicializa el cronómetro y ejecuta toda su operación.
+			if (opcion == 1) {
+				cronometro.inciar();
+				impCronometroPausar();
+				boolean pausa = true;
+				while (pausa) {
+					opcion = Integer.parseInt(input("> Escoja una opción"));
+					if (opcion == 1) {
+						pausar();
+						pausa = false;
+					}
+					else if (opcion == 2) {
+						Hora duracionNeta = cronometro.calcularDuracion();
+						String cadenaDuracionNeta = duracionNeta.getHora() + ":" + duracionNeta.getMinutos() + ":" + duracionNeta.getSegundos() ;
+						System.out.println("\n< La duración de la actividad (HH:mm:ss) fue de:" + cadenaDuracionNeta + "." );
+						pausa = false;
+					}
+					else {
+						System.out.println("\n< ERROR: escoja una opción adecuada.");
+					}
+				}
+				pausar();
+				error = false;
+			}
+			
+			// Regresar.
+			else if (opcion == 2)
+				error = false;
+			
+			// Error.
+			else {
+				System.out.println("\n< ERROR: escoja una opción adecuada.");
+			}
+		}
+	}
+	
+	/**
+	 * Pausa el cronómetro y retorna la duración.
+	 * 
+	 * @return Duración neta.
+	 */
+	private Hora pausar() {
+		Hora duracionNeta = null;
+		cronometro.pausar();
+		boolean error = true;
+		while (error) {
+			impCronometroContinuar();
+			int opcion = Integer.parseInt(input("> Escoja una opción"));
+			if (opcion == 1) {
+				continuar();
+				error = false;
+			}
+			else if (opcion == 2) {
+				duracionNeta = cronometro.calcularDuracion();
+				String cadenaDuracionNeta = duracionNeta.getHora() + ":" + duracionNeta.getMinutos() + ":" + duracionNeta.getSegundos() ;
+				System.out.println("\n< La duración de la actividad (HH:mm:ss) fue de:" + cadenaDuracionNeta + "." );
+				error = false;
+			}
+			else {
+				System.out.println("\n< ERROR: escoja una opción adecuada.");
+			}
+		}
+		return duracionNeta;
+	}
+	
+	private Hora continuar() {
+		Hora duracionNeta = null;
+		cronometro.continuar();
+		impCronometroPausar();
+		boolean error = true;
+		while (error) {
+			int opcion = Integer.parseInt(input("> Escoja una opción"));
+			if (opcion == 1) {
+				pausar();
+				error = false;
+			}
+			else if (opcion == 2) {
+				duracionNeta = cronometro.calcularDuracion();
+				String cadenaDuracionNeta = duracionNeta.getHora() + ":" + duracionNeta.getMinutos() + ":" + duracionNeta.getSegundos() ;
+				System.out.println("\n< La duración de la actividad (HH:mm:ss) fue de:" + cadenaDuracionNeta + "." );
+				error = false;
+			}
+			else {
+				System.out.println("\n< ERROR: escoja una opción adecuada.");
+			}
+		}
+		return duracionNeta;
+	}
+	
+	
+	// ************************************************************************
+	// Métodos de la calculadora
+	// ************************************************************************
+	
+	/**
+	 * Ejecuta las opciones relacionadas a lasestadísitcas del participante actual.
+	 */
+	private void ejeEstadisticas() {
+		boolean continuar = true;
+		ArrayList<String> proyectos = adminProy.getParticipanteActual().getProyectos();
+		impHeader(11);
+		while (continuar) {
+			impEstadisticas();
+			int opcionSeleccionada = Integer.parseInt(input("> Escoja una opción"));
+			
+			// Tiempo total invertido.
+			if (opcionSeleccionada == 1) {
+				boolean invalido = true;
+				while (invalido) {
+					System.out.println("\nEstos son los proyecto a los que pertenece:");
+					for (int i = 0; i < proyectos.size(); i++)
+						System.out.println(" " + (i + 1) + "- " + proyectos.get(i) + ".");
+					int opcionProyecto = Integer.parseInt(input("> Escoja uno"));
+					try {
+						calc.tiempoTotalInvertido(adminProy.getParticipanteActual(), adminProy.getProyectos().get(proyectos.get(opcionProyecto - 1)));
+						invalido = false;
+					}
+					catch (Exception e) {
+						System.out.println("\n< ERROR: ingrese un número adecuado.");
+					}
+				}
+			}
+			
+			// Regresar.
+			else if (opcionSeleccionada == 2) {
+				continuar = false; System.out.println(); impHeader(5);
+			}
+			
+			// Error.
+			else {
+				System.out.println("\n< ERROR: ingrese un número adecuado.");
+			}
+			
+		}
 	}
 	
 	// ************************************************************************
