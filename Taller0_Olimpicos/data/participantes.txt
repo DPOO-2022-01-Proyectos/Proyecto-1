@@ -1,3 +1,5 @@
 correo;nombre;proyecto1;...;proyecton
 j.jauregui@uniandes.edu.co;Juan	Manuel;Proyecto 2
-j.cardenast@uniandes.edu.co;Nicolás;Proyecto 1;Proyecto 2
+otro@gmail.com;otro;Proyecto 4
+s.paez@uniandes.edu.co;Santiago Paez;Proyecto 3
+j.cardenast@uniandes.edu.co;Nicolás;Proyecto 1;Proyecto 2;Proyecto 3;Proyecto 4

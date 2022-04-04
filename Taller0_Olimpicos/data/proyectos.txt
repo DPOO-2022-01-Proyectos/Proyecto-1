@@ -1,3 +1,5 @@
 nombre;descripcion;fechaI;fechaF;participantes
 Proyecto 1;Primer proyecto.;2022/03/20;2022/03/22;j.cardenast@uniandes.edu.co
-Proyecto 2;Segundo proyecto.;2022/03/21;2022/03/23;j.cardenast@uniandes.edu.co;j.jauregui@uniandes.edu.co
+Proyecto 2;Segundo proyecto.;2022/03/21;2022/03/23;j.jauregui@uniandes.edu.co;j.cardenast@uniandes.edu.co
+Proyecto 3;Tercer proyecto.;2022/02/02;2022/03/03;j.cardenast@uniandes.edu.co;s.paez@uniandes.edu.co
+Proyecto 4;Cuarto proyecto;2021/03/02;2022/03/02;otro@gmail.com;j.cardenast@uniandes.edu.co
