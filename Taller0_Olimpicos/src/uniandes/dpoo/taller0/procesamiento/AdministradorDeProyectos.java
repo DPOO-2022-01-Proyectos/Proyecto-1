@@ -138,7 +138,9 @@ public class AdministradorDeProyectos {
 	 */
 	public void añadirParticipante(String nombre, String correo) {
 		Participante nuevoParticipante = new Participante(nombre, correo);
+		nuevoParticipante.añadirProyecto(proyectoActual.getNombre());
 		proyectoActual.añadirParticipante(nuevoParticipante);
+		añadirParticipanteAMapa(nuevoParticipante);
 	}
 	
 	/**

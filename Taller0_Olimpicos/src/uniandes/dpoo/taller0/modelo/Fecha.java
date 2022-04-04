@@ -96,4 +96,20 @@ public class Fecha {
 		return año;
 	}
 	
+	public String fechaString() {
+		String fecha = "";
+		fecha += año + "/";
+		if (mes < 10)
+			fecha += "0" + mes + "/";
+		else
+			fecha += mes + "/";
+		
+		if (dia < 10) 
+			fecha += "0" + dia;
+		else
+			fecha += dia;
+		
+		return fecha;
+	}
+	
 }

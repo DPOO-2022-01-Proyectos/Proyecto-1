@@ -197,7 +197,18 @@ public class Loader {
 		return adminProy;
 	}
 	
+	/**
+	 * Carga la información nueva.
+	 * 
+	 * @param adminProy
+	 * @param archivoProyectos
+	 * @param archivoParticipantes
+	 * @param archivoRegistros
+	 * 
+	 * @throws IOException
+	 */
 	public static void guardarNuevaInfo(AdministradorDeProyectos adminProy, String archivoProyectos, String archivoParticipantes, String archivoRegistros) throws IOException {
+		
 		HashMap<String, Proyecto> proyectos = adminProy.getProyectos();
 		HashMap<String, Participante> participantes = adminProy.getParticipantes();
 		
@@ -223,11 +234,11 @@ public class Loader {
 		}
 		pw.close();
 		
-		String pathProyectos = System.getProperty("user.dir") + "/data/prueba1.txt";
+		String pathProyectos = System.getProperty("user.dir") + "/data/proyectos.txt";
 		path = Paths.get(pathProyectos);
 		Files.delete(path);
 		
-		archivo = new File(System.getProperty("user.dir") + "/data/prueba1.txt");
+		archivo = new File(System.getProperty("user.dir") + "/data/proyectos.txt");
 		fw = new FileWriter(archivo);
 		pw = new PrintWriter(fw);
 		
@@ -236,17 +247,64 @@ public class Loader {
 			linea = "";
 			String nombre = proyecto.getNombre(); linea += nombre; 
 			String descripcion = proyecto.getDescripcion(); linea += ";" + descripcion;
-			Fecha fechaI = proyecto.getFechaInicio(); 
-			String fechaIString = fechaI.getAño() + "/" + fechaI.getMes() + "/" + fechaI.getDia();
-			linea += ";" + fechaIString;
-			Fecha fechaF = proyecto.getFechaFin();
-			String fechaFString = fechaF.getAño() + "/" + fechaF.getMes() + "/" + fechaF.getDia();
-			linea += ";" + fechaFString;
+			String fechaI = proyecto.getFechaInicio().fechaString(); linea += ";" + fechaI;
+			String fechaF = proyecto.getFechaFin().fechaString();linea += ";" + fechaF;
 			for (Participante participante:proyecto.getParticipantes().values()) {
 				linea += ";" + participante.getCorreo();
 			}
 			pw.println(linea);
 		}
+		pw.close();
+		
+		String pathActividades = System.getProperty("user.dir") + "/data/actividades.txt";
+		path = Paths.get(pathActividades);
+		Files.delete(path);
+		
+		archivo = new File(System.getProperty("user.dir") + "/data/actividades.txt");
+		fw = new FileWriter(archivo);
+		pw = new PrintWriter(fw);
+		pw.println("nombreProyecto;título;descripción;tipo;fecha;horaI;horaF");
+		
+		for (Proyecto proyecto:proyectos.values()){
+			linea = "";
+			for (Actividad actividad:proyecto.getActividades().values()) {
+				linea = "";
+				String nombre = proyecto.getNombre(); linea += nombre;
+				String titulo = actividad.getTitulo(); linea += ";" + titulo;
+				String descripcion = actividad.getDescripcion(); linea += ";" + descripcion;
+				String tipo = actividad.getTipo(); linea += (";" + tipo);
+				String fecha = actividad.getFechaRealizacion().fechaString(); linea += ";" + fecha;
+				String horaI = actividad.getHoraInicio().horaString(); linea += ";" + horaI;
+				String horaF = actividad.getHoraFin().horaString(); linea += ";" + horaF;
+				pw.println(linea);
+			}
+		}
+		pw.close();
+		
+		String pathRegistros = System.getProperty("user.dir") + "/data/registros.txt";
+		path = Paths.get(pathRegistros);
+		Files.delete(path);
+		
+		archivo = new File(System.getProperty("user.dir") + "/data/registros.txt");
+		fw = new FileWriter(archivo);
+		pw = new PrintWriter(fw);
+		
+		pw.println("nombre;correoAutor;fecha;hora;nombreProyecto");
+		for (Proyecto proyecto:proyectos.values()){
+			linea = "";
+			for (Actividad actividad:proyecto.getActividades().values()) {
+				for (RegistroActividad registro:actividad.getRegistros()) {
+					linea = "";
+					String nombre = registro.getNombre(); linea += nombre;
+					String correo = registro.getAutor().getCorreo(); linea += ";" + correo;
+					String fecha = registro.getFecha().fechaString(); linea += ";" + fecha;
+					String hora = registro.getHora().horaString(); linea += ";" + hora;
+					String nombreProyecto = proyecto.getNombre(); linea += ";" + nombreProyecto;
+					pw.println(linea);
+				}
+			}
+		}
+		
 		pw.close();
 		
 	}

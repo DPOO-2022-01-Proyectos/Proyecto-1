@@ -96,4 +96,25 @@ public class Hora {
 		return segundos;
 	}
 	
+	public String horaString() {
+		String cadenaHora = "";
+		
+		if (hora < 10)
+			cadenaHora += "0" + hora + ":";
+		else
+			cadenaHora += hora + ":";
+		
+		if (minutos < 10)
+			cadenaHora += "0" + minutos + ":";
+		else
+			cadenaHora += minutos + ":";
+		
+		if (segundos < 10) 
+			cadenaHora += "0" + segundos;
+		else
+			cadenaHora += segundos;
+		
+		return cadenaHora;
+	}
+	
 }
