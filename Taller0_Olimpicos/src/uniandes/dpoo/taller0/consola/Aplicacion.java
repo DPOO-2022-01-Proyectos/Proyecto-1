@@ -90,6 +90,14 @@ public class Aplicacion {
 		
 		impHeader(1);
 		
+		System.out.println("\nAclaraciones:");
+		System.out.println("> Los archivos tienen información de prueba para facilitar el uso de la aplicación.");
+		System.out.println("> Hay cuatro participantes y cuatro proyectos.");
+		
+		System.out.println("\nIngrese la siguiente información para hacer pruebas:");
+		System.out.println("> Nombre: Nicolás");
+		System.out.println("> Correo: j.cardenast@uniandes.edu.co");
+		
 		// Bucle para el menú principal.
 		boolean continuar = true;
 		while (continuar) {
@@ -290,10 +298,7 @@ public class Aplicacion {
 			participanteActual = new Participante(nombre, correo);
 			adminProy.añadirParticipanteAMapa(participanteActual);
 		}
-		
-		// TODO Velocidad.
-		participanteActual = adminProy.getParticipantes().get("j.cardenast@uniandes.edu.co");
-		
+			
 		adminProy.iniciarSesion(participanteActual);
 		System.out.println("\n< Bienvenido, " + participanteActual.getNombre() + ".");
 	}
