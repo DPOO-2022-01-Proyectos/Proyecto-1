@@ -59,9 +59,9 @@ public class Fecha {
 	 * @param fechaString 2022/20/20
 	 */
 	public Fecha(String fechaString) {
-		this.dia = Integer.parseInt(fechaString.substring(0, 4));
+		this.año = Integer.parseInt(fechaString.substring(0, 4));
 		this.mes = Integer.parseInt(fechaString.substring(5, 7));
-		this.año = Integer.parseInt(fechaString.substring(8, 10));
+		this.dia = Integer.parseInt(fechaString.substring(8, 10));
 	}
 
 	

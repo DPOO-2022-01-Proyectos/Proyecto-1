@@ -106,6 +106,7 @@ public class Aplicacion {
 				else if (opcion_seleccionada == 2) {
 					System.out.println("\n< Gracias por usar la aplicación. Adiós.");
 					continuar = false;
+					Loader.guardarNuevaInfo(adminProy, null, null, null);
 				}
 				
 				// Opción inválida.
@@ -657,20 +658,15 @@ public class Aplicacion {
 			// Inicializa el cronómetro y ejecuta toda su operación.
 			if (opcion == 1) {
 				cronometro.inciar();
-				impCronometroPausar();
 				boolean pausa = true;
 				while (pausa) {
+					impCronometroPausar();
 					opcion = Integer.parseInt(input("> Escoja una opción"));
 					if (opcion == 1) {
 						pausar();
 						pausa = false;
 					}
-					else if (opcion == 2) {
-						Hora duracionNeta = cronometro.calcularDuracion();
-						String cadenaDuracionNeta = duracionNeta.getHora() + ":" + duracionNeta.getMinutos() + ":" + duracionNeta.getSegundos() ;
-						System.out.println("\n< La duración de la actividad (HH:mm:ss) fue de:" + cadenaDuracionNeta + "." );
-						pausa = false;
-					}
+					
 					else {
 						System.out.println("\n< ERROR: escoja una opción adecuada.");
 					}
@@ -709,7 +705,7 @@ public class Aplicacion {
 			else if (opcion == 2) {
 				duracionNeta = cronometro.calcularDuracion();
 				String cadenaDuracionNeta = duracionNeta.getHora() + ":" + duracionNeta.getMinutos() + ":" + duracionNeta.getSegundos() ;
-				System.out.println("\n< La duración de la actividad (HH:mm:ss) fue de:" + cadenaDuracionNeta + "." );
+				System.out.println("\n< La duración de la actividad (en formato HH:mm:ss) fue de :" + cadenaDuracionNeta + "." );
 				error = false;
 			}
 			else {
@@ -722,9 +718,9 @@ public class Aplicacion {
 	private Hora continuar() {
 		Hora duracionNeta = null;
 		cronometro.continuar();
-		impCronometroPausar();
 		boolean error = true;
 		while (error) {
+			impCronometroPausar();
 			int opcion = Integer.parseInt(input("> Escoja una opción"));
 			if (opcion == 1) {
 				pausar();
@@ -732,8 +728,8 @@ public class Aplicacion {
 			}
 			else if (opcion == 2) {
 				duracionNeta = cronometro.calcularDuracion();
-				String cadenaDuracionNeta = duracionNeta.getHora() + ":" + duracionNeta.getMinutos() + ":" + duracionNeta.getSegundos() ;
-				System.out.println("\n< La duración de la actividad (HH:mm:ss) fue de:" + cadenaDuracionNeta + "." );
+				String cadenaDuracionNeta = duracionNeta.getHora() + ":" + duracionNeta.getMinutos() + ":" + duracionNeta.getSegundos();
+				System.out.println("\n< La duración de la actividad (en formato HH:mm:ss) fue de: " + cadenaDuracionNeta + "." );
 				error = false;
 			}
 			else {

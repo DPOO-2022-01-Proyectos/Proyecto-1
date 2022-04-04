@@ -1,8 +1,14 @@
 package uniandes.dpoo.taller0.procesamiento;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -189,6 +195,60 @@ public class Loader {
 		}
 		br.close();
 		return adminProy;
-	}	
+	}
+	
+	public static void guardarNuevaInfo(AdministradorDeProyectos adminProy, String archivoProyectos, String archivoParticipantes, String archivoRegistros) throws IOException {
+		HashMap<String, Proyecto> proyectos = adminProy.getProyectos();
+		HashMap<String, Participante> participantes = adminProy.getParticipantes();
+		
+		String pathParticipantes = System.getProperty("user.dir") + "/data/participantes.txt";
+		Path path = Paths.get(pathParticipantes);
+		Files.delete(path);
+		
+		File archivo = new File(System.getProperty("user.dir") + "/data/participantes.txt");
+		FileWriter fw = new FileWriter(archivo);
+		PrintWriter pw = new PrintWriter(fw);
+		
+		
+		pw.println("correo;nombre;proyecto1;...;proyecton");
+		String linea;
+		for (Participante participante:participantes.values()){
+			linea = "";
+			String correo = participante.getCorreo(); linea += correo; 
+			String nombre = participante.getNombre(); linea += ";" + nombre;
+			for (String proyecto:participante.getProyectos()) {
+				linea += ";" + proyecto;
+			}
+			pw.println(linea);
+		}
+		pw.close();
+		
+		String pathProyectos = System.getProperty("user.dir") + "/data/prueba1.txt";
+		path = Paths.get(pathProyectos);
+		Files.delete(path);
+		
+		archivo = new File(System.getProperty("user.dir") + "/data/prueba1.txt");
+		fw = new FileWriter(archivo);
+		pw = new PrintWriter(fw);
+		
+		pw.println("nombre;descripcion;fechaI;fechaF;participantes");
+		for (Proyecto proyecto:proyectos.values()){
+			linea = "";
+			String nombre = proyecto.getNombre(); linea += nombre; 
+			String descripcion = proyecto.getDescripcion(); linea += ";" + descripcion;
+			Fecha fechaI = proyecto.getFechaInicio(); 
+			String fechaIString = fechaI.getAño() + "/" + fechaI.getMes() + "/" + fechaI.getDia();
+			linea += ";" + fechaIString;
+			Fecha fechaF = proyecto.getFechaFin();
+			String fechaFString = fechaF.getAño() + "/" + fechaF.getMes() + "/" + fechaF.getDia();
+			linea += ";" + fechaFString;
+			for (Participante participante:proyecto.getParticipantes().values()) {
+				linea += ";" + participante.getCorreo();
+			}
+			pw.println(linea);
+		}
+		pw.close();
+		
+	}
 	
 }
